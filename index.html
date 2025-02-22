@@ -5,8 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KmriCricker: KC</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="alert.css"  />
 </head>
 <body>
+  
+  <div id="overlay"></div>
+
+<!-- Custom Alert -->
+<div id="custom-alert">
+  <div class="alert-icon">⚠️</div>
+  <p>Join our Telegram!</p>
+  <div class="buttons">
+    <button class="close-btn" onclick="closeAlert()">Close</button>
+    <a href="https://t.me/kmricricker" target="_blank" class="telegram-btn">Telegram</a>
+  </div>
+</div>
 
     <div class="container">
         <!-- Full-Frame Player -->
@@ -16,7 +29,7 @@
             </div>
             <div class="logo-overlay" id="logoOverlay">
                 <div class="logo-text">Please select a channel to play</div>
-            </div>
+a            </div>
             <div class="corner-logo">
                 <a href="https://i.postimg.cc/9XGtny3q/IMG-20250221-222251-004.jpg" target="_blank">
                     <img src="https://i.postimg.cc/FHSvBKv1/Picsart-25-02-21-23-29-55-478.png" alt="Kmricricker">
@@ -206,8 +219,8 @@
         padding:0;
         left: 8px;
         z-index: 20;
-        width: 60px;
-        height: 30px;
+        width: 90px;
+        height: 45px;
         background-color: ;
         border-radius: 10%;
         display: flex;
@@ -226,8 +239,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 60%;
+        height: 30%;
         background: black url('https://i.postimg.cc/FHSvBKv1/Picsart-25-02-21-23-29-55-478.png') center center no-repeat;
         background-size: contain;
         z-index: 10;
@@ -517,7 +530,12 @@ const container = document.querySelector('.container');
   </div>
 
 </body>
+
+<script src="alert.js" type="text/javascript" charset="utf-8">
+  
+</script>
 </html>
+
 
 
 <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>

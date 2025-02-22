@@ -1,0 +1,65 @@
+
+        /* Custom alert styling */
+        #custom-alert {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+             /* Set width to 85% */
+            
+            max-width: 500px; /* Optional: Limit max width */
+            background-color: #121212;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .alert-icon {
+            font-size: 40px;
+            color: #ffcc00;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            margin-top: 15px;
+        }
+
+        button, .telegram-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        .close-btn {
+            background-color: #a02828e3;
+            color: white;
+        }
+
+       
+
+        .telegram-btn {
+            background-color:#a02828e3;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        
