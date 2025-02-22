@@ -294,4 +294,254 @@ a            </div>
     .channel img {
         width: 100px;
         height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .channel:hover {
+        transform: scale(1.05);
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    .tab-button {
+        background: white;
+        color: black;
+        padding: 5px 25px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .tab-button:hover {
+        background-color: red;
+    }
+
+    .tab-button:focus {
+        outline: none;
+    }
+
+    /* Controls for Full-Screen Button */
+    .controls {
+        position: absolute;
+        bottom : 68%;
+        right: 10px;
+        z-index: 10;
+    }
+
+    #fullscreenButton {
+        background: red;
+        color: black;
+        padding: 0px;
+        border-radius: 100%;
+        height: 30px;
+        width:30px;
+        cursor: pointer;
+        font-size: 20px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    #fullscreenButton:hover {
+        background: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Full-Screen Mode - Hide everything except the player */
+    .fullscreen-mode #controls,
+    .fullscreen-mode .tab-button,
+    .fullscreen-mode .category {
+        display: none;
+    }
+
+    .fullscreen-mode #mainPlayer {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw; /* Adjust as necessary */
+        height: 90vh; /* Adjust as necessary */
+        z-index: 100;
+    }
+
+    .fullscreen-mode iframe {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Desktop Auto Height Adjustment to 600px */
+    @media (min-width: 768px) {
+        .player-container iframe {
+            height: 600px; /* Set the height to 600px on desktop */
+        }
+    }
+  </style>
+
+    <script>
+        // Function to show the selected tab
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.category');
+            tabs.forEach(tab => tab.style.display = 'none');
     
+            document.getElementById(tabName).style.display = 'block';
+            
+            checkIfVideoLoaded();
+        }
+
+        // Function to play a selected channel in the iframe
+        function playChannelIframe(url) {
+            let iframe = document.getElementById("iframePlayer");
+            iframe.src = url;
+
+            document.getElementById("logoOverlay").style.display = 'none';
+        }
+
+        // Function to check if a video has been loaded
+        function checkIfVideoLoaded() {
+            let iframe = document.getElementById("iframePlayer");
+            let videoElement = document.getElementById("mainPlayer");
+            let logoOverlay = document.getElementById("logoOverlay");
+
+            if (!iframe.src || iframe.src === "") {
+                videoElement.innerHTML = '';
+                logoOverlay.style.display = 'flex'; // Display the logo overlay when no video is loaded
+            }
+        }
+
+        // Full-Screen Toggle Functionality
+        function toggleFullScreen() {
+            const iframe = document.getElementById('iframePlayer');
+            const videoElement = document.getElementById('mainPlayer');
+
+const container = document.querySelector('.container');
+            const controls = document.getElementById('controls');
+            
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                // Refresh the page when exiting full-screen mode
+                location.reload(); 
+            } else {
+                // Request fullscreen for the iframe itself
+                if (iframe.requestFullscreen) {
+                    iframe.requestFullscreen();
+                } else if (iframe.mozRequestFullScreen) { // Firefox
+                    iframe.mozRequestFullScreen();
+                } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                    iframe.webkitRequestFullscreen();
+                } else if (iframe.msRequestFullscreen) { // IE/Edge
+                    iframe.msRequestFullscreen();
+                }
+
+                container.classList.add('fullscreen-mode'); // Add the full-screen mode class
+                // Hide controls and tabs
+                controls.style.display = 'none';
+                const tabButtons = document.querySelectorAll('.tab-button');
+                tabButtons.forEach(button => button.style.display = 'none');
+                const categories = document.querySelectorAll('.category');
+                categories.forEach(category => category.style.display = 'none');
+            }
+        }
+
+        // Event listener to detect when full-screen changes
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                location.reload(); // Reload the page when exiting full-screen
+            }
+        })
+
+        // Automatically select "All" category when the page loads
+        window.onload = function() {
+            showTab('all'); // Show the "All" category by default
+        }
+    </script>
+</body>
+</html>
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #121212;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      position: relative; /* Ensures overlay can be positioned relative to the body */
+    }
+
+    /* Overlay style at the bottom of the page */
+    .scrolling-text-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: red; /* Red background with transparency */
+      color: black; /* Text color */
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center; /* Vertically center the text */
+      justify-content: center;
+      height: 30px; /* Height of the overlay */
+      border-radius: 15px 15px 0 0; /* Rounded top corners */
+      z-index: 1000; /* Ensures it appears on top of other content */
+    }
+
+    /* Scrolling text container */
+    .scrolling-text-container {
+      width: 99%; /* Width set to 99% */
+      overflow: hidden;
+    }
+
+    /* Scrolling text animation */
+    .scrolling-text {
+      display: inline-block;
+      white-space: nowrap;
+      animation: scrollText 20s linear infinite; /* Slower animation */
+      color: black; /* Black text */
+      font-weight: bold; /* Bold text */
+      font-size: 18px;
+    }
+
+    @keyframes scrollText {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Your page content goes here -->
+
+  <!-- Scrolling text overlay at the bottom -->
+  <div class="scrolling-text-overlay">
+    <div class="scrolling-text-container">
+      <p class="scrolling-text">✦ SITE DEVELOPED BY KMRICRICKER , WE DON'T HAVE OWNERSHIP OF ANY CONTENT  ALL THE  LINKS ARE AVAILABLE FREELEY ON INTERNET . OUR TELEGRM CHANNL: KMRI CRICKER✦</p>
+    </div>
+  </div>
+
+</body>
+
+<script src="alert.js" type="text/javascript" charset="utf-8">
+  
+</script>
+</html>
+
+
+
+<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f31a11cffc8846bf95f1db2a2e162fa3"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>
+
