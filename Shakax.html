@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/1pYGvdp/klogo.jpg">
+    <title>KashurFlix Shaka</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.6/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.6/controls.min.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        #video-container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            background-color: black;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+        }
+
+        #telegramButton {
+            margin-top: 10px;
+            background-color: #0088cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+        }
+
+        #telegramButton:hover {
+            background-color: #006799;
+        }
+
+        #loadingImage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.ibb.co/qFLHj2qM/ingx8.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <div id="loadingImage"></div>
+        <video id="video" preload="auto"></video>
+    </div>
+
+    <button id="telegramButton" onclick="window.open('https://t.me/+y2t5X8MOn_hlMWI1', '_blank')">Join Telegram</button>
+
+    <script>
+        // Increment counter for user interactions
+        function incrementInteractionCount() {
+            let count = localStorage.getItem('interactionCount') || 0;
+            count = parseInt(count) + 1;
+            localStorage.setItem('interactionCount', count);
+
+            if (count >= 3) {
+                // Show Telegram button after 3 interactions
+                document.getElementById('telegramButton').style.display = 'block';
+                // Reset the interaction count
+                localStorage.setItem('interactionCount', 0);
+            }
+        }
+
+        // Increment counter each time the user clicks the video or plays a link (example)
+        document.getElementById('video').addEventListener('click', incrementInteractionCount);
+        document.querySelector('button').addEventListener('click', incrementInteractionCount); // Add more event listeners as needed
+
+        async function initPlayer() {
+            const video = document.getElementById('video');
+            const videoContainer = document.getElementById('video-container');
+            const manifestUri = getQueryParam('url');
+
+            if (!manifestUri) {
+                console.error('No video URL provided in query parameter.');
+                return;
+            }
+
+            if (shaka.Player.isBrowserSupported()) {
+                const player = new shaka.Player(video);
+
+                // Initialize UI (Overlay)
+                const ui = new shaka.ui.Overlay(player, videoContainer, video);
+                ui.configure({
+                    controls: true,
+                    seekBar: true
+                });
+
+                // Retrieve the previously selected quality setting from localStorage
+                const savedQuality = localStorage.getItem('videoQuality') || 'auto'; // Default to 'auto'
+                setQuality(savedQuality);
+
+                video.addEventListener('play', function() {
+                    document.getElementById('loadingImage').style.display = 'none';
+                });
+
+                try {
+                    await player.load(manifestUri);
+                    console.log('Video loaded successfully');
+                } catch (error) {
+                    console.error('Error loading video: ', error);
+                }
+            } else {
+                console.error('Shaka Player is not supported on this browser.');
+            }
+        }
+
+        // Add logic for quality settings
+        function setQuality(quality) {
+            if (quality === '144p') {
+                console.log('Setting quality to 144p');
+            } else if (quality === 'auto') {
+                console.log('Setting quality to auto');
+            }
+        }
+
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initPlayer();
+            // Call function to check if we should show the button on page load
+            incrementInteractionCount();
+        });
+    </script>
+</body>
+</html>
